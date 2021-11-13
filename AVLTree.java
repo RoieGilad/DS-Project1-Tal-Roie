@@ -8,6 +8,7 @@
  */
 
 public class AVLTree {
+	System.out.println("hey");
 
   /**
    * public boolean empty()
