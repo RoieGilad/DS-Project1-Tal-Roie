@@ -178,7 +178,33 @@ public class AVLTree {
     * This class can and MUST be modified (It must implement IAVLNode).
     */
   public class AVLNode implements IAVLNode{
-		public int getKey()
+
+	  private Integer key;
+	  private String info;
+	  private AVLNode Left;
+	  private AVLNode Right;
+	  private int Height;
+	  private AVLNode parent;
+	  private static final AVLNode VirtualNode;
+
+	  public AVLNode(Integer key, String info){
+		  this.key = key;
+		  this.info = info;
+		  this.Left = VirtualNode;
+		  this.Right = VirtualNode;
+
+	  }
+	   public AVLNode(){
+		   this.key = null;
+		   this.info = null;
+		   this.Left = null;
+		   this.Right = null;
+		   this.Height = -1;
+
+
+
+
+		   public int getKey()
 		{
 			return 423; // to be replaced by student code
 		}
