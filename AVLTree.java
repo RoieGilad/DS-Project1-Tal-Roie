@@ -76,7 +76,7 @@ public class AVLTree {
     * or null if the tree is empty.
     */
    public String max()
-   {
+   {//pitpit
 	   return "maxDefaultString"; // to be replaced by student code
    }
 
