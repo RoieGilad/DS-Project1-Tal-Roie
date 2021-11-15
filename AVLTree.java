@@ -21,7 +21,7 @@ public class AVLTree {
    *
    */
   public boolean empty() {
-  	return root == null // root == null iff the tree is empty
+  	return root == null ;// root == null iff the tree is empty
   }
 
 
@@ -81,7 +81,7 @@ public class AVLTree {
     * or null if the tree is empty.
     */
    public String max()
-   {//pitpit2
+   {
 	   return "maxDefaultString"; // to be replaced by student code
    }
 
@@ -184,7 +184,7 @@ public class AVLTree {
     */
   public class AVLNode implements IAVLNode{
 
-	  private Integer key;
+	  private int key;
 	  private String info;
 	  private IAVLNode Left;
 	  private IAVLNode Right;
@@ -200,7 +200,7 @@ public class AVLTree {
 
 	  }
 	   public AVLNode() { //default constructor for digital node
-		   this.key = null;
+		   this.key = -1;
 		   this.info = null;
 		   this.Left = null;
 		   this.Right = null;
@@ -210,11 +210,8 @@ public class AVLTree {
 
 
 		   public int getKey(){
-	  		if (this.key == null){
-	  			return -1;}
-			else{
 		   	return this.key;
-		   }}
+		   }
 
 		public String getValue(){
 			return this.info;		}
@@ -223,7 +220,7 @@ public class AVLTree {
 	  		this.Left = node;	}
 
 		public IAVLNode getLeft(){
-	  		if ()
+	  		return this.Left;
 		}
 
 
@@ -231,8 +228,7 @@ public class AVLTree {
   			this.Right = node;}
 
 		public IAVLNode getRight() {
-
-		}
+	  		return this.Right;}
 
 
 		public void setParent(IAVLNode node){
@@ -243,8 +239,7 @@ public class AVLTree {
 		}
 
 		public boolean isRealNode(){
-
-			return true; // to be replaced by student code
+	  		return this.key != -1; // node is real iff node.key != -1
 		}
 
 	    public void setHeight(int height){
