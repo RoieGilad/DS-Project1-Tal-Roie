@@ -81,7 +81,7 @@ public class AVLTree {
     * or null if the tree is empty.
     */
    public String max()
-   {//pitpit
+   {//pitpit2
 	   return "maxDefaultString"; // to be replaced by student code
    }
 
