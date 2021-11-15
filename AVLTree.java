@@ -8,6 +8,11 @@
  */
 
 public class AVLTree {
+	private  IAVLNode root;
+	private IAVLNode min;
+	private IAVLNode max;
+	private int Height;
+	private int Size;
 
   /**
    * public boolean empty()
@@ -16,7 +21,7 @@ public class AVLTree {
    *
    */
   public boolean empty() {
-    return false; // to be replaced by student code
+  	return root == null // root == null iff the tree is empty
   }
 
 
@@ -181,11 +186,11 @@ public class AVLTree {
 
 	  private Integer key;
 	  private String info;
-	  private AVLNode Left;
-	  private AVLNode Right;
+	  private IAVLNode Left;
+	  private IAVLNode Right;
 	  private int Height;
-	  private AVLNode parent;
-	  private static final AVLNode VirtualNode;
+	  private IAVLNode parent;
+	  private static final IAVLNode VirtualNode; // same digital node for all real nodes
 
 	  public AVLNode(Integer key, String info){
 		  this.key = key;
@@ -194,59 +199,60 @@ public class AVLTree {
 		  this.Right = VirtualNode;
 
 	  }
-	   public AVLNode(){
+	   public AVLNode() { //default constructor for digital node
 		   this.key = null;
 		   this.info = null;
 		   this.Left = null;
 		   this.Right = null;
 		   this.Height = -1;
+	   }
 
 
 
+		   public int getKey(){
+	  		if (this.key == null){
+	  			return -1;}
+			else{
+		   	return this.key;
+		   }}
 
-		   public int getKey()
-		{
-			return 423; // to be replaced by student code
+		public String getValue(){
+			return this.info;		}
+
+		public void setLeft(IAVLNode node){
+	  		this.Left = node;	}
+
+		public IAVLNode getLeft(){
+	  		if ()
 		}
-		public String getValue()
-		{
-			return "getValueDefault"; // to be replaced by student code
+
+
+		public void setRight(IAVLNode node){
+  			this.Right = node;}
+
+		public IAVLNode getRight() {
+
 		}
-		public void setLeft(IAVLNode node)
-		{
-			return; // to be replaced by student code
+
+
+		public void setParent(IAVLNode node){
+			this.parent = node;
 		}
-		public IAVLNode getLeft()
-		{
-			return null; // to be replaced by student code
+		public IAVLNode getParent(){
+	  		return this.parent;
 		}
-		public void setRight(IAVLNode node)
-		{
-			return; // to be replaced by student code
-		}
-		public IAVLNode getRight()
-		{
-			return null; // to be replaced by student code
-		}
-		public void setParent(IAVLNode node)
-		{
-			return; // to be replaced by student code
-		}
-		public IAVLNode getParent()
-		{
-			return null; // to be replaced by student code
-		}
-		public boolean isRealNode()
-		{
+
+		public boolean isRealNode(){
+
 			return true; // to be replaced by student code
 		}
-	    public void setHeight(int height)
-	    {
-	      return; // to be replaced by student code
+
+	    public void setHeight(int height){
+	  		this.Height = height;
 	    }
-	    public int getHeight()
-	    {
-	      return 424; // to be replaced by student code
+
+	    public int getHeight(){
+	      return this.Height; // to be replaced by student code
 	    }
   }
 
