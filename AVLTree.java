@@ -33,7 +33,7 @@ public class AVLTree {
    */
   public String search(int k){
 
-  	IAVLNode node = this.find(k); // find search for node with key = K
+  	IAVLNode node = this.find(k); // find searching for node with key = k
 
 	  if (node != null){           // if found return the value of the key
   		return node.getValue();}
@@ -70,53 +70,109 @@ public class AVLTree {
 
 	else{
 		IAVLNode toBeRebalance = this.deleteRetrieve(nDelete); // delete nDelete and retrieve the node that rebalancing should start from
-		int cnt = this.reBalanceDelete(toBeRebalance,0); // counting rotates and demotes...
+		int cnt = this.reBalanceDelete(toBeRebalance); // rebalance while counting rotates and demotes...
 		return cnt;	}
    }
-
-	private int reBalanceDelete(IAVLNode node, int i) {
+// from here if sub Function for the delete function
+	/** sub Functions for delete
+	 * private int reBalanceDelete(IAVLNode node)
+	 * takes a node that maybe need to rebalance and rebalance it while counting rotates and promotes/demotes
+	 * @return the count of rotates and promotes/demotes
+	 */
+	private int reBalanceDelete(IAVLNode node) {
    		int L = node.getRankLeft();
    		int R = node.getRankRight();
 
-   		if (L== 3 && R == 1){
+   		if (L== 3 && R == 1){ // the node that is about to rebalance is in (3,1) condition
    			IAVLNode RightChild = node.getRight();
    			int RL = RightChild.getRankLeft();
    			int RR = RightChild.getRankRight();
 
-   			if (RL == 1 && RR ==1){
-   				i += reBalanceCase3111(node, RightChild, true , i);
+   			if (RL == 1 && RR ==1){ // (3,1) condition and the left child is at (1,1) condiotion
+				return reBalanceCase3111(node, RightChild, true );}
 
-			}
+   			else if (RL == 2 && RR == 1){ // (3,1) condition and the left child is at (2,1) condiotion
+   				return reBalanceCase3121(node, RightChild , true );}
 
-   			else if (RL == 2 && RR == 1){
-   				i += reBalanceCase3121(node, RightChild , true , i);
-   				return i;
-				}
+   			else if (RL == 1 && RR == 2){ // (3,1) condition and the left child is at (1,2) condiotion
+					return reBalanceCase3112(node,RightChild,RightChild.getLeft(),true);}
+   		}
 
-   			else if (RL == 1 && RR == 2){
-					i += reBalanceCase3112(node,RightChild,RightChild.getLeft(),true, i);}
-				return i;}
-
-
-   		else if (L == 1 && R== 3 ){
+   		else if (L == 1 && R== 3 ){ // the node that is about to rebalance is in (1,3) condition
 			IAVLNode LeftChild = node.getLeft();
 			int LL = LeftChild.getRankLeft();
 			int LR = LeftChild.getRankRight();
 
-			if (LL == 1 && LR ==1){}
+			if (LL == 1 && LR ==1){ // (1,3) condition and the left child is at (1,1) condiotion
+				return reBalanceCase3111(node, LeftChild, false );}
 
-			else if (LL == 2 && LR == 1){}
+			else if (LL == 2 && LR == 1){ // (1,3) condition and the left child is at (2,1) condiotion
+				return reBalanceCase3121(node, LeftChild , false );}
 
-			else if (LL == 1 && LR == 2){}
-
-
+			else if (LL == 1 && LR == 2){  // (1,3) condition and the left child is at (1,2) condiotion
+			return reBalanceCase3112(node , LeftChild , LeftChild.getRight() ,false);}
 		}
-   		else if (L == 2 && R == 2){
 
-		}
-   		else {
-   			return i ;}
+   		else if (L == 2 && R == 2){ // the node that is about to rebalance is in (2,2) condition
+   			return reBalanceCase22(node);}
+   		else { // the node is balanced
+   			return 0 ;}
 	}
+
+	private int reBalanceCase22(IAVLNode node) { //rebalance after delete (2,2) case
+   		node.setHeightAlone(); // demote
+		if (this.root == node){ // no need to go and rebalance parent
+			return 1;}
+		else{
+			return 1 + reBalanceDelete(node.getParent());}} // check if parent if rebalanced
+
+
+	private int reBalanceCase3112(IAVLNode z, IAVLNode y , IAVLNode a, boolean left) { //rebalance after delete 31 - 12 / 13 - 21 case
+   		if (left){
+   			// rotate right on the (a,y) edge
+			// roate left on the (z,a) edge
+	}
+   		else if (!left) {
+			// rotate left on (y,a) edge
+			// rotate right on (a,z)
+   		}
+		// promotes and demotes?
+
+		if (this.root == a){ // there is no need to go up for rebalancing
+   			return 2;}
+		else { // go up and check if rebalanced
+			return 2 + this.reBalanceDelete(a.getParent());}
+		}
+
+	private int reBalanceCase3121(IAVLNode z, IAVLNode y, boolean left) { //rebalance after delete 31 - 21 / 13 - 12 case
+		if (left){
+			// rotate left on (z,y) edge
+		}
+		else if (!left) {
+			// rotate right (y,z) edge
+		}
+		 // demote twice z
+		if (this.root == y){ // there is no need to go up for rebalancing
+			return 3;}
+		else { // go up and check if rebalanced
+			return 3 + reBalanceDelete(y.getParent());}
+	}
+
+
+	private int reBalanceCase3111(IAVLNode z, IAVLNode y, boolean left ) { //rebalance after delete 31 - 11 / 13 - 11 case
+		if (left) {
+					}// rotate left on the (z,y) edge
+
+		else {
+					}// rotate right on the (y,z) edge
+			// demote z
+			// promote y
+			return 3;}
+
+			//
+
+
+
 
 	private IAVLNode deleteRetrieve(IAVLNode nDelete) {
    		IAVLNode returnNode = null;
@@ -134,7 +190,7 @@ public class AVLTree {
 
 		return returnNode;}
 
-	private IAVLNode deleteRetrieveFamily(IAVLNode nDelete) { // delete & retrieve node to be balance for root with two children
+	private IAVLNode deleteRetrieveFamily(IAVLNode nDelete) { // delete & retrieve node to be balanced for node with two children
 		IAVLNode parent = nDelete.getParent();
 		IAVLNode mySuccessor = this.successor(nDelete); //finds the successor that will replace the deleted node
 		IAVLNode tmp = deleteRetrieve(mySuccessor);
@@ -143,6 +199,7 @@ public class AVLTree {
 			this.root = mySuccessor;}
 		else {							// updating my parent
 			mySuccessor.setParent(parent);
+
 			if (nDelete.getKey() < parent.getKey()) {
 				parent.setLeft(mySuccessor);}
 			else {
@@ -154,39 +211,18 @@ public class AVLTree {
 		mySuccessor.setHeightAlone(); // updating successor by the new sons
 		return tmp;}
 
-	private IAVLNode successor(IAVLNode node) { // finding the successor of a node
 
-   		if ( node.getRight().isRealNode()){ // if I have a right child so my successor is on that sub tree
-   			return  myMin(node.getRight());}
-
-   		//else my successor is above me
-   		IAVLNode parent = node.getParent();
-
-   		while (parent != null && node == parent.getRight()){ // go up till you come from the left or you are in the root
-   			node = parent;
-   			parent = node.getParent(); }
-   		return parent;}
-
-	private IAVLNode myMin(IAVLNode node) { // finding the most minimum node in my sub tree
-   		while (node.getLeft().isRealNode()){ // go left if you can
-   			node = node.getLeft();}
-   		return node;}
-
-
-	private IAVLNode deleteRetrieveRight(IAVLNode nDelete) { // delete & retrieve node to be balance for root with one right children
+	private IAVLNode deleteRetrieveRight(IAVLNode nDelete) { // delete & retrieve node to be balanced for node with one right children
 		IAVLNode parent = nDelete.getParent();
 
 		if (nDelete == this.root) {  // root special case
 			this.root = nDelete.getRight();
-			root.setHeightAlone(); // updating height due to new state after deletion
 			return this.root;}
 		else if (nDelete.getKey() < parent.getKey()) { // nDelete is left child of parent
 			parent.setLeft(nDelete.getRight()); // byPass
-			parent.setHeightAlone(); // updating height due to new state after deletion
 			return parent;}
 		else {        // nDelete is right child of parent
 			parent.setRight(nDelete.getRight()); // byPass
-			parent.setHeightAlone(); // updating height due to new state after deletion
 			return parent;
 		}}
 
@@ -195,40 +231,55 @@ public class AVLTree {
 
 		if (nDelete == this.root) {  // root special case
 			this.root = nDelete.getLeft();
-			parent.setHeightAlone(); // updating height due to new state after deletion
 			return this.root;}
 
 		else if (nDelete.getKey() < parent.getKey()) { // nDelete is left child of parent
 			parent.setLeft(nDelete.getLeft()); // byPass
-			parent.setHeightAlone(); // updating height due to new state after deletion
 			return parent;}
 
 		else {        // nDelete is right child of parent
 			parent.setRight(nDelete.getLeft()); // byPass
-			parent.setHeightAlone(); // updating height due to new state after deletion
 			return parent;}}
 
 
 
 
-	private IAVLNode deleteRetrieveLeaf(IAVLNode nDelete) { // delete & retrieve node to be balance for root that is a Leaf
+	private IAVLNode deleteRetrieveLeaf(IAVLNode nDelete) { // delete & retrieve node to be balanced for node that is a Leaf
 		IAVLNode parent = nDelete.getParent();
-		
+
 		if (nDelete == this.root) {  // root special case
 			this.root = null;
 			return this.root;}
 
 		else if (nDelete.getKey() < parent.getKey()) { // nDelete is left child of parent
 			parent.setLeft(nDelete.getLeft()); // byPass
-			parent.setHeightAlone(); // updating height due to new state after deletion
 			return parent;}
 
 		else {        // nDelete is right child of parent
 			parent.setRight(nDelete.getRight()); // byPass
-			parent.setHeightAlone(); // updating height due to new state after deletion
 			return parent;
 		}}
+// till here sub function for the delete function
 
+	private IAVLNode successor(IAVLNode node) { // finding the successor of a node
+
+		if ( node.getRight().isRealNode()){ // if I have a right child so my successor is on that sub tree
+			return  myMin(node.getRight());}
+
+		//else my successor is above me
+		IAVLNode parent = node.getParent();
+
+		while (parent != null && node == parent.getRight()){ // go up till you come from the left or you are in the root
+			node = parent;
+			parent = node.getParent(); }
+		return parent;}
+
+
+
+	private IAVLNode myMin(IAVLNode node) { // finding the most minimum node in my sub tree
+		while (node.getLeft().isRealNode()){ // go left if you can
+			node = node.getLeft();}
+		return node;}
 
 	/**
     * public StringBe min()
@@ -336,6 +387,7 @@ public class AVLTree {
 
    		else { curr = curr.getRight();} // go right
 	}
+
    	if (curr == null){return null;}
    	else if (curr.isRealNode()){ // if found real return the node
    		return curr;}
