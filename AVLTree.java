@@ -158,6 +158,7 @@ public class AVLTree {
 	if (place_to_insert.getKey() > k){
 		place_to_insert.setLeft(new_node);
 	} else {
+		int j;
 		place_to_insert.setRight(new_node);
 	}
 	if (k < min.getKey()){ //update min
