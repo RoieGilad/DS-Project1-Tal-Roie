@@ -1,3 +1,5 @@
+import java.util.Iterator;
+
 /**
  *
  * AVLTree
@@ -7,7 +9,7 @@
  *
  */
 
-public class AVLTree {
+public class AVLTree  {
 	private  IAVLNode root;
 	private IAVLNode min;
 	private IAVLNode max;
@@ -119,7 +121,23 @@ public class AVLTree {
 	  return 0;
   }
 
-  private void rotate_right(IAVLNode node){
+	private void rotate_left(IAVLNode node1 , IAVLNode node2) {
+  	this.iterator();
+  		node1.setRight(node2.getLeft());
+  		node1.getRight().setParent(node1);
+  		node2.setLeft(node1);
+  		if (node1.getParent() != null) {
+  			if (node1.getParent().getKey() < node1.getKey()){
+  				node1.getParent().setRight(node2);}
+  			else{
+  				node1.getParent().setLeft(node2);}}
+			node2.setParent(node1.getParent());
+			node1.setParent(node2);
+		}
+
+
+
+	private void rotate_right(IAVLNode node){
 	  IAVLNode left_child = node.getLeft();
 	  node.setLeft(left_child.getRight());
 	  node.getLeft().setParent(node);
@@ -158,7 +176,6 @@ public class AVLTree {
 	if (place_to_insert.getKey() > k){
 		place_to_insert.setLeft(new_node);
 	} else {
-		int j;
 		place_to_insert.setRight(new_node);
 	}
 	if (k < min.getKey()){ //update min
@@ -183,20 +200,30 @@ public class AVLTree {
    */
    public int delete(int k){
    	IAVLNode nDelete = this.find(k); // searching for node with key = K that is about to be deleted
-   	if (nDelete == null){ return -1;} // if node wasn't found return -1
+	   if (nDelete == null){ return -1;} // if node wasn't found return -1
 
 	else{
+		if (this.size() > 1 ){ // updating min or max if necessary
+			if (nDelete.getKey() == this.min.getKey()){
+				this.min = this.successor(nDelete);}
+			if (nDelete.getKey() == this.max.getKey()){
+				this.max = this.predecessor(nDelete);}
+		}
 		IAVLNode toBeRebalance = this.deleteRetrieve(nDelete); // delete nDelete and retrieve the node that rebalancing should start from
-		int cnt = this.reBalanceDelete(toBeRebalance); // rebalance while counting rotates and demotes...
-		return cnt;	}
+
+		if (toBeRebalance == null){return 0;}
+		else {
+		   return this.reBalanceDelete(toBeRebalance,0);}}
    }
+
+
 // from here if sub Function for the delete function
 	/** sub Functions for delete
 	 * private int reBalanceDelete(IAVLNode node)
 	 * takes a node that maybe need to rebalance and rebalance it while counting rotates and promotes/demotes
 	 * @return the count of rotates and promotes/demotes
 	 */
-	private int reBalanceDelete(IAVLNode node) {
+	private int reBalanceDelete(IAVLNode node , int cnt) {
    		int L = node.getRankLeft();
    		int R = node.getRankRight();
 
@@ -206,13 +233,13 @@ public class AVLTree {
    			int RR = RightChild.getRankRight();
 
    			if (RL == 1 && RR ==1){ // (3,1) condition and the left child is at (1,1) condiotion
-				return reBalanceCase3111(node, RightChild, true );}
+				cnt += reBalanceCase3111(node, RightChild, true , cnt );}
 
    			else if (RL == 2 && RR == 1){ // (3,1) condition and the left child is at (2,1) condiotion
-   				return reBalanceCase3121(node, RightChild , true );}
+				cnt += reBalanceCase3121(node, RightChild , true , cnt );}
 
    			else if (RL == 1 && RR == 2){ // (3,1) condition and the left child is at (1,2) condiotion
-					return reBalanceCase3112(node,RightChild,RightChild.getLeft(),true);}
+				cnt += reBalanceCase3112(node,RightChild,RightChild.getLeft(),true , cnt );}
    		}
 
    		else if (L == 1 && R== 3 ){ // the node that is about to rebalance is in (1,3) condition
@@ -221,69 +248,72 @@ public class AVLTree {
 			int LR = LeftChild.getRankRight();
 
 			if (LL == 1 && LR ==1){ // (1,3) condition and the left child is at (1,1) condiotion
-				return reBalanceCase3111(node, LeftChild, false );}
+				cnt += reBalanceCase3111(node, LeftChild, false , cnt );}
 
 			else if (LL == 2 && LR == 1){ // (1,3) condition and the left child is at (2,1) condiotion
-				return reBalanceCase3121(node, LeftChild , false );}
+				cnt += reBalanceCase3121(node, LeftChild , false, cnt  );}
 
 			else if (LL == 1 && LR == 2){  // (1,3) condition and the left child is at (1,2) condiotion
-			return reBalanceCase3112(node , LeftChild , LeftChild.getRight() ,false);}
+				cnt += reBalanceCase3112(node , LeftChild , LeftChild.getRight() ,false, cnt );}
 		}
 
    		else if (L == 2 && R == 2){ // the node that is about to rebalance is in (2,2) condition
-   			return reBalanceCase22(node);}
-   		else { // the node is balanced
-   			return 0 ;}
-	}
+			cnt += reBalanceCase22(node, cnt );}
+   		 // the node is balanced
+   			return cnt ;}
 
-	private int reBalanceCase22(IAVLNode node) { //rebalance after delete (2,2) case
+
+	private int reBalanceCase22(IAVLNode node , int cnt) { //rebalance after delete (2,2) case
    		node.setHeightAlone(); // demote
 		if (this.root == node){ // no need to go and rebalance parent
 			return 1;}
 		else{
-			return 1 + reBalanceDelete(node.getParent());}} // check if parent if rebalanced
+			return  reBalanceDelete(node.getParent(), 1+ cnt);}} // check if parent if rebalanced
 
 
-	private int reBalanceCase3112(IAVLNode z, IAVLNode y , IAVLNode a, boolean left) { //rebalance after delete 31 - 12 / 13 - 21 case
+	private int reBalanceCase3112(IAVLNode z, IAVLNode y , IAVLNode a, boolean left , int cnt ) { //rebalance after delete 31 - 12 / 13 - 21 case
    		if (left){
-   			// rotate right on the (a,y) edge
-			// roate left on the (z,a) edge
-	}
-   		else if (!left) {
-			// rotate left on (y,a) edge
-			// rotate right on (a,z)
+   			rotate_right(a,y);	// rotate right on the (a,y) edge
+			rotate_left(z,a);// roate left on the (z,a) edge
    		}
-		// promotes and demotes?
+
+   		else if (!left) {
+			rotate_left(y,a);// rotate left on (y,a) edge
+			rotate_right(a,z);// rotate right on (a,z)
+   		}
+		z.setHeightAlone();// promotes and demotes
+		y.setHeightAlone();
+		a.setHeightAlone();
 
 		if (this.root == a){ // there is no need to go up for rebalancing
-   			return 2;}
+   			return 6;}
 		else { // go up and check if rebalanced
-			return 2 + this.reBalanceDelete(a.getParent());}
+			return  this.reBalanceDelete(a.getParent() , 6 + cnt);}
 		}
 
-	private int reBalanceCase3121(IAVLNode z, IAVLNode y, boolean left) { //rebalance after delete 31 - 21 / 13 - 12 case
+	private int reBalanceCase3121(IAVLNode z, IAVLNode y, boolean left, int cnt) { //rebalance after delete 31 - 21 / 13 - 12 case
 		if (left){
-			// rotate left on (z,y) edge
+			rotate_left(z,y);	// rotate left on (z,y) edge
 		}
 		else if (!left) {
-			// rotate right (y,z) edge
+			rotate_right(y,z);// rotate right (y,z) edge
 		}
-		 // demote twice z
+		 z.setHeightAlone(); // demote twice z
 		if (this.root == y){ // there is no need to go up for rebalancing
 			return 3;}
 		else { // go up and check if rebalanced
-			return 3 + reBalanceDelete(y.getParent());}
+			return  reBalanceDelete(y.getParent() , 3 + cnt);}
 	}
 
 
-	private int reBalanceCase3111(IAVLNode z, IAVLNode y, boolean left ) { //rebalance after delete 31 - 11 / 13 - 11 case
+	private int reBalanceCase3111(IAVLNode z, IAVLNode y, boolean left, int cnt ) { //rebalance after delete 31 - 11 / 13 - 11 case
 		if (left) {
-					}// rotate left on the (z,y) edge
+				rotate_left(z,y);	}// rotate left on the (z,y) edge
 
 		else {
-					}// rotate right on the (y,z) edge
-			// demote z
-			// promote y
+				rotate_right(y,z);	}// rotate right on the (y,z) edge
+			z.setHeightAlone();// demote z
+			y.setHeightAlone();// promote y
 			return 3;}
 
 			//
@@ -366,7 +396,7 @@ public class AVLTree {
 
 		if (nDelete == this.root) {  // root special case
 			this.root = null;
-			return this.root;}
+			return null;}
 
 		else if (nDelete.getKey() < parent.getKey()) { // nDelete is left child of parent
 			parent.setLeft(nDelete.getLeft()); // byPass
@@ -391,6 +421,9 @@ public class AVLTree {
 			parent = node.getParent(); }
 		return parent;}
 
+	private IAVLNode predecessor(IAVLNode nDelete) { // return the predecessor of node if doesnt exist return null
+
+	}
 
 
 	private IAVLNode myMin(IAVLNode node) { // finding the most minimum node in my sub tree
@@ -509,6 +542,8 @@ public class AVLTree {
    	else if (curr.isRealNode()){ // if found real return the node
    		return curr;}
    	else { return null;}} // if not return null
+
+
 
 
 	/**
