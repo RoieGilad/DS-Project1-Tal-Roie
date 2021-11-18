@@ -14,7 +14,7 @@ public class AVLTree  {
 	private IAVLNode min;
 	private IAVLNode max;
 	private int Height;
-	private int Size;
+	private int size;
 
   /**
    * public boolean empty()
@@ -56,7 +56,7 @@ public class AVLTree  {
 
 
   private IAVLNode place_to_insert(IAVLNode node) { //the last node to insert
-	  IAVLNode search = this.node;
+	  IAVLNode search = this.root;
 	  IAVLNode place = search;
 	  while (search != null) {
 		  place = search;
@@ -122,7 +122,6 @@ public class AVLTree  {
   }
 
 	private void rotate_left(IAVLNode node1 , IAVLNode node2) {
-  	this.iterator();
   		node1.setRight(node2.getLeft());
   		node1.getRight().setParent(node1);
   		node2.setLeft(node1);
@@ -137,7 +136,7 @@ public class AVLTree  {
 
 
 
-	private void rotate_right(IAVLNode node){
+	private void rotate_right(IAVLNode node , IAVLNode node2){
 	  IAVLNode left_child = node.getLeft();
 	  node.setLeft(left_child.getRight());
 	  node.getLeft().setParent(node);
@@ -160,11 +159,11 @@ public class AVLTree  {
 
   public int insert(int k, String i) {
 	IAVLNode new_node = new AVLNode(k, i);
-	if (node == null) {
-		node = new_node;
+	if (root == null) {
+		root = new_node;
 		min = new_node;
 		max = new_node;
-		Size = 1;
+		size = 1;
 		return 0;
 	}
 
@@ -184,7 +183,7 @@ public class AVLTree  {
 	if (k > max.getKey()){ //update max
 		max = new_node;
 	}
-	Size = Size + 1;
+	size = size + 1;
 	return rebalance(place_to_insert, 0);
   }
 
@@ -209,6 +208,7 @@ public class AVLTree  {
 			if (nDelete.getKey() == this.max.getKey()){
 				this.max = this.predecessor(nDelete);}
 		}
+		size -= 1;
 		IAVLNode toBeRebalance = this.deleteRetrieve(nDelete); // delete nDelete and retrieve the node that rebalancing should start from
 
 		if (toBeRebalance == null){return 0;}
@@ -423,7 +423,7 @@ public class AVLTree  {
 
 	private IAVLNode predecessor(IAVLNode nDelete) { // return the predecessor of node if doesnt exist return null
 
-	}
+	return null ; }
 
 
 	private IAVLNode myMin(IAVLNode node) { // finding the most minimum node in my sub tree
@@ -439,7 +439,7 @@ public class AVLTree  {
     */
    public String min()
    {
-	   return (node == null) ? null : min.getValue();
+	   return (root == null) ? null : min.getValue();
    }
 
    /**
@@ -450,7 +450,7 @@ public class AVLTree  {
     */
    public String max()
    {
-	   return (node == null) ? null : max.getValue();
+	   return (root == null) ? null : max.getValue();
    }
 
   /**
@@ -493,7 +493,7 @@ public class AVLTree  {
     */
    public IAVLNode getRoot()
    {
-	   return node;
+	   return root;
    }
    
    /**
@@ -583,7 +583,7 @@ public class AVLTree  {
 	  private IAVLNode Right;
 	  private int Height;
 	  private IAVLNode parent;
-	  private static final IAVLNode VirtualNode = new AVLNode();// same digital node for all real nodes
+	  private  final IAVLNode VirtualNode = new AVLNode();// same digital node for all real nodes
 
 	  public AVLNode(Integer key, String info){
 		  this.key = key;
@@ -639,9 +639,7 @@ public class AVLTree  {
 	  		this.Height = height;
 	    }
 
-	    public int getHeight(){
-	      return this.Height; // to be replaced by student code
-	    }
+	    public int getHeight(){return this.Height; }
 
 	   @Override
 	   public int getRankLeft() { // return the the difference rank from left
