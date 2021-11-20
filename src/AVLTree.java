@@ -237,7 +237,7 @@ public class AVLTree  {
 		   * takes a node that maybe need to rebalance and rebalance it while counting rotates and promotes/demotes
 		   * @return the count of rotates and promotes/demotes
 		   */
-		  private int reBalanceDelete (IAVLNode node ,int cnt){
+		  private int reBalanceDelete (IAVLNode node ){
 			  int L = node.getRankLeft();
 			  int R = node.getRankRight();
 
@@ -247,11 +247,11 @@ public class AVLTree  {
 				  int RR = RightChild.getRankRight();
 
 				  if (RL == 1 && RR == 1) { // (3,1) condition and the left child is at (1,1) condiotion
-					  cnt += reBalanceCase3111(node, RightChild, true, cnt);
+					  return reBalanceCase3111(node, RightChild, true);
 				  } else if (RL == 2 && RR == 1) { // (3,1) condition and the left child is at (2,1) condiotion
-					  cnt += reBalanceCase3121(node, RightChild, true, cnt);
+					  return reBalanceCase3121(node, RightChild, true);
 				  } else if (RL == 1 && RR == 2) { // (3,1) condition and the left child is at (1,2) condiotion
-					  cnt += reBalanceCase3112(node, RightChild, RightChild.getLeft(), true, cnt);
+					  return reBalanceCase3112(node, RightChild, RightChild.getLeft(), true);
 				  }
 			  } else if (L == 1 && R == 3) { // the node that is about to rebalance is in (1,3) condition
 				  IAVLNode LeftChild = node.getLeft();
@@ -273,63 +273,62 @@ public class AVLTree  {
 		  }
 
 
-		  private int reBalanceCase22 (IAVLNode node ,int cnt){ //rebalance after delete (2,2) case
+		  private int reBalanceCase22 (IAVLNode node ){ //rebalance after delete (2,2) case
 			  node.setHeightAlone(); // demote
 			  if (this.root == node) { // no need to go and rebalance parent
 				  return 1;
 			  } else {
-				  return reBalanceDelete(node.getParent(), 1 + cnt);
+				  return 1 + reBalanceDelete(node.getParent());
 			  }
 		  } // check if parent if rebalanced
 
 
-		  private int reBalanceCase3112 (IAVLNode z, IAVLNode y, IAVLNode a,boolean left, int cnt )
+		  private int reBalanceCase3112 (IAVLNode z, IAVLNode y, IAVLNode a,boolean left )
 		  { //rebalance after delete 31 - 12 / 13 - 21 case
 			  if (left) {
-				  rotate_right(a, y);    // rotate right on the (a,y) edge
-				  rotate_left(z, a);// roate left on the (z,a) edge
+				      // rotate right on the (a,y) edge
+				  // roate left on the (z,a) edge
 			  } else if (!left) {
-				  rotate_left(y, a);// rotate left on (y,a) edge
-				  rotate_right(a, z);// rotate right on (a,z)
+				  // rotate left on (y,a) edge
+				  // rotate right on (a,z)
 			  }
-			  z.setHeightAlone();// promotes and demotes
-			  y.setHeightAlone();
-			  a.setHeightAlone();
+			  // promotes and demotes
+			  ?
 
 			  if (this.root == a) { // there is no need to go up for rebalancing
-				  return 6;
+				  return 2;
 			  } else { // go up and check if rebalanced
-				  return this.reBalanceDelete(a.getParent(), 6 + cnt);
+				  return 2 +this.reBalanceDelete(a.getParent());
 			  }
 		  }
 
-		  private int reBalanceCase3121 (IAVLNode z, IAVLNode y,boolean left, int cnt)
+		  private int reBalanceCase3121 (IAVLNode z, IAVLNode y,boolean left)
 		  { //rebalance after delete 31 - 21 / 13 - 12 case
 			  if (left) {
-				  rotate_left(z, y);    // rotate left on (z,y) edge
+				      // rotate left on (z,y) edge
 			  } else if (!left) {
-				  rotate_right(y, z);// rotate right (y,z) edge
+				  // rotate right (y,z) edge
 			  }
-			  z.setHeightAlone(); // demote twice z
+			   // demote twice z
 			  if (this.root == y) { // there is no need to go up for rebalancing
 				  return 3;
 			  } else { // go up and check if rebalanced
-				  return reBalanceDelete(y.getParent(), 3 + cnt);
+				  return 3 +reBalanceDelete(y.getParent());
 			  }
 		  }
 
 
-		  private int reBalanceCase3111 (IAVLNode z, IAVLNode y,boolean left, int cnt )
+		  private int reBalanceCase3111 (IAVLNode z, IAVLNode y,boolean left )
 		  { //rebalance after delete 31 - 11 / 13 - 11 case
 			  if (left) {
-				  rotate_left(z, y);
+
 			  }// rotate left on the (z,y) edge
 
 			  else {
-				  rotate_right(y, z);
+
 			  }// rotate right on the (y,z) edge
-			  z.setHeightAlone();// demote z
-			  y.setHeightAlone();// promote y
+			  // demote z
+			  // promote y
 			  return 3;
 		  }
 
@@ -415,7 +414,7 @@ public class AVLTree  {
 
 			  if (nDelete == this.root) {  // root special case
 				  this.root = null;
-				  return null;
+				  return this.root;
 			  } else if (nDelete.getKey() < parent.getKey()) { // nDelete is left child of parent
 				  parent.setLeft(nDelete.getLeft()); // byPass
 				  return parent;
@@ -475,7 +474,7 @@ public class AVLTree  {
 		   */
 		  public String min ()
 		  {
-			  return (root == null) ? null : min.getValue();
+			  return (node == null) ? null : min.getValue();
 		  }
 
 		  /**
@@ -486,8 +485,57 @@ public class AVLTree  {
 		   */
 		  public String max ()
 		  {
-			  return (root == null) ? null : max.getValue();
-		  }
+			  return (node == null) ? null : max.getValue();
+   }
+
+
+	private int[] inorder_walk_key(IAVLNode root){
+		int cnt = 0;
+		IAVLNode node = root;
+		int[] order = new int[size()];
+		Stack<IAVLNode> save = new Stack<IAVLNode>();
+		while ((node.getLeft() != null)||(save!= null)){
+			if (node.getLeft()!=null){
+				save.push(node);
+				node = node.getLeft();
+			} else{
+				order[cnt] = node.getKey();
+				cnt += 1;
+				if (node.getRight() != null){
+					node = node.getRight();
+				} else{
+					node = save.pop();
+				}
+			}
+
+		}
+		return order;
+	}
+
+	private String[] inorder_walk_val(IAVLNode root){
+		int cnt = 0;
+		IAVLNode node = root;
+		String[] order = new String[size()];
+		Stack<IAVLNode> save = new Stack<IAVLNode>();
+		while ((node.getLeft() != null)||(save!= null)){
+			if (node.getLeft()!=null){
+				save.push(node);
+				node = node.getLeft();
+			} else{
+				order[cnt] = node.getValue();
+		  cnt += 1;
+				if (node.getRight() != null){
+					node = node.getRight();
+				} else{
+					node = save.pop();
+				}
+			}
+
+		}
+		return order;
+	}
+
+
 
 
 		//ivate int[] inorder_walk_key (IAVLNode root){
@@ -548,7 +596,6 @@ public class AVLTree  {
 	//		  return inorder_walk_key(root); // to be replaced by student code
 	//	  }
 
-
 		  /**
 		   * public String[] infoToArray()
 		   *
@@ -607,7 +654,7 @@ public class AVLTree  {
 
 
 		  //// need to fix!!
-		  public int join (IAVLNode x, AVLTree t){
+		//// need to fix!!  public int join (IAVLNode x, AVLTree t){
 			  int h_1 = t.Height;
 			  int h_2 = this.Height;
 			  if (h_1 == -1 && h_2 == -1) { //both empty
@@ -658,7 +705,6 @@ public class AVLTree  {
 
 		  }
 
-
 		  private IAVLNode find ( int k){ // finding node with key = K
 			  IAVLNode curr = this.root;
 
@@ -681,8 +727,6 @@ public class AVLTree  {
 				  return null;
 			  }
 		  } // if not return null
-
-
 
 
 	/**
@@ -722,7 +766,7 @@ public class AVLTree  {
 	  private IAVLNode Right;
 	  private int Height;
 	  private IAVLNode parent;
-	  private  final IAVLNode VirtualNode = new AVLNode();// same digital node for all real nodes
+	  private static final IAVLNode VirtualNode = new AVLNode();// same digital node for all real nodes
 
 	  public AVLNode(Integer key, String info){
 		  this.key = key;
@@ -778,7 +822,9 @@ public class AVLTree  {
 	  		this.Height = height;
 	    }
 
-	    public int getHeight(){return this.Height; }
+	    public int getHeight(){
+	      return this.Height; // to be replaced by student code
+	    }
 
 	   @Override
 	   public int getRankLeft() { // return the the difference rank from left
