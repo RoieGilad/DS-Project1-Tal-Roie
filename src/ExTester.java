@@ -276,17 +276,17 @@ public class ExTester {
                     }
                 }), 6);
 
-        runWithInterrupt(success,
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            success[7] = first_tester.keysToArray() ? SuccessStatus.PASS : SuccessStatus.FAIL;
-                        } catch (Throwable e) {
-                            success[7] = SuccessStatus.EXCEPTION;
-                        }
-                    }
-                }), 7);
+  //     runWithInterrupt(success,
+  //             new Thread(new Runnable() {
+  //                 @Override
+  //                 public void run() {
+  //                     try {
+  //                         success[7] = first_tester.keysToArray() ? SuccessStatus.PASS : SuccessStatus.FAIL;
+  //                     } catch (Throwable e) {
+  //                         success[7] = SuccessStatus.EXCEPTION;
+  //                     }
+  //                 }
+  //             }), 7);
 
         runWithInterrupt(success,
                 new Thread(new Runnable() {

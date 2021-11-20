@@ -68,23 +68,23 @@ public class Tests {
         return (avlTree.min().equals(avlTree.max()));
     }
 
-    public boolean keysToArray() {
-        AVLTree avlTree = new AVLTree();
-        String infoarray[];
-        int[] keysarray;
-        for (int i = 0; i < 100; i++) {
-            avlTree.insert(i, "num" + i);
-        }
-        keysarray = avlTree.keysToArray();
-        infoarray = avlTree.infoToArray();
-        for (int i = 0; i < 100; i++) {
-            if (!(infoarray[i].equals("num" + i) && keysarray[i] == i)) {
-                return false;
-            }
-        }
-        return true;
+ //   public boolean keysToArray() {
+ //       AVLTree avlTree = new AVLTree();
+ //       String infoarray[];
+ //       int[] keysarray;
+ //       for (int i = 0; i < 100; i++) {
+ //           avlTree.insert(i, "num" + i);
+ //       }
+ //       keysarray = avlTree.keysToArray();
+ //       infoarray = avlTree.infoToArray();
+ //       for (int i = 0; i < 100; i++) {
+ //           if (!(infoarray[i].equals("num" + i) && keysarray[i] == i)) {
+ //               return false;
+ //           }
+ //       }
+ //       return true;
 
-    }
+    
 
     public boolean size() {
         AVLTree avlTree = new AVLTree();
